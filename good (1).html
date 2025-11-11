@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartesia Emotional Intelligence • Demo Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #000000;
+            --bg-card: #1A1A1A;
+            --bg-card-lighter: #242424;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8B92A3;
+            --text-dim: #4B5563;
+            --accent-teal: #14F195;
+            --accent-yellow: #FFD93D;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --hume-purple: #A855F7;
+            --elevenlabs-yellow: #FFD93D;
+            --cartesia-teal: #14F195;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --error-red: #EF4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to bottom, var(--bg-dark) 85%, transparent);
+            z-index: 100;
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(120deg, var(--text-primary) 0%, var(--accent-teal) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-content .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Scenario Selector */
+        .scenario-control {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .scenario-selector {
+            flex: 1;
+        }
+
+        .scenario-selector select {
+            width: 100%;
+            background: var(--bg-card-lighter);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-selector select:hover {
+            border-color: var(--accent-teal);
+        }
+
+        .scenario-selector select:focus {
+            outline: none;
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+        }
+
+        .goal-tag {
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            color: var(--accent-teal);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .play-all-scenario {
+            background: linear-gradient(135deg, var(--accent-teal), #1FA89A);
+            border: none;
+            color: var(--bg-dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .play-all-scenario:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+        }
+
+        .sentence-preview {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-style: italic;
+            margin-top: 12px;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-teal);
+        }
+
+        /* Provider Cards Grid */
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .provider-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            animation: fadeSlideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .provider-card:nth-child(1) { animation-delay: 0.1s; }
+        .provider-card:nth-child(2) { animation-delay: 0.2s; }
+        .provider-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .provider-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px -20px var(--accent-teal);
+            border-color: rgba(45, 212, 191, 0.3);
+        }
+
+        .provider-card.hume:hover {
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px -20px var(--hume-purple);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .provider-card.elevenlabs:hover {
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px -20px var(--elevenlabs-yellow);
+            border-color: rgba(252, 211, 77, 0.3);
+        }
+
+        /* Provider Header */
+        .provider-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .provider-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .provider-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .hume .provider-icon {
+            background: var(--hume-purple);
+        }
+
+        .elevenlabs .provider-icon {
+            background: var(--elevenlabs-yellow);
+        }
+
+        .cartesia .provider-icon {
+            background: var(--cartesia-teal);
+        }
+
+        .provider-specs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .spec-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* Technical Specs */
+        .tech-specs {
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .spec-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .spec-label {
+            color: var(--text-dim);
+        }
+
+        .spec-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .confidence-bar {
+            display: inline-block;
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--accent-teal);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .hume .confidence-fill {
+            background: var(--hume-purple);
+            width: 72%;
+        }
+
+        .cartesia .confidence-fill {
+            background: var(--accent-teal);
+            width: 86%;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .diagram-label {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .architecture-flow-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flow-node {
+            background: var(--bg-card-lighter);
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            text-align: center;
+            min-width: 140px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .flow-node:hover {
+            transform: translateX(4px);
+            border-color: var(--accent-teal);
+        }
+
+        .hume .flow-node:hover {
+            border-color: var(--hume-purple);
+        }
+
+        .elevenlabs .flow-node:hover {
+            border-color: var(--elevenlabs-yellow);
+        }
+
+        .flow-arrow {
+            width: 2px;
+            height: 20px;
+            background: var(--border-color);
+            position: relative;
+        }
+
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid var(--border-color);
+        }
+
+        .flow-node.input {
+            background: rgba(45, 212, 191, 0.1);
+            border-color: var(--accent-teal);
+        }
+
+        .hume .flow-node.input {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--hume-purple);
+        }
+
+        .elevenlabs .flow-node.input {
+            background: rgba(252, 211, 77, 0.1);
+            border-color: var(--elevenlabs-yellow);
+        }
+
+        .flow-node.output {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success-green);
+            font-weight: 600;
+        }
+
+        .latency-indicator {
+            font-size: 0.7rem;
+            color: var(--warning-orange);
+            margin-top: 4px;
+        }
+
+        /* Audio Section */
+        .audio-section {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, var(--accent-teal), #1FA89A);
+            border: none;
+            color: var(--bg-dark);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hume .play-button {
+            background: linear-gradient(135deg, var(--hume-purple), #7A4FE0);
+        }
+
+        .elevenlabs .play-button {
+            background: linear-gradient(135deg, var(--elevenlabs-yellow), #FAC03D);
+            color: var(--bg-dark);
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .play-button.playing {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Animated Waveform */
+        .waveform-container {
+            width: 100%;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .waveform-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .waveform-bar {
+            fill: var(--accent-teal);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .hume .waveform-bar {
+            fill: var(--hume-purple);
+        }
+
+        .elevenlabs .waveform-bar {
+            fill: var(--elevenlabs-yellow);
+        }
+
+        .playing .waveform-bar {
+            animation: wave 0.8s ease-in-out infinite;
+            opacity: 1;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1); }
+        }
+
+        .waveform-bar:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+
+        .waveform-bar:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        /* Response Output */
+        .response-output {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            min-height: 120px;
+        }
+
+        .output-label {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .output-text {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .output-text em {
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 8px;
+        }
+
+        /* Code Preview */
+        .code-preview {
+            background: #050505;
+            border-top: 1px solid var(--border-color);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease-in-out;
+        }
+
+        .code-preview.expanded {
+            max-height: 500px;
+        }
+
+        .code-toggle {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: none;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 16px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .code-toggle:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+        }
+
+        .code-content {
+            padding: 20px;
+        }
+
+        .code-block {
+            background: #061212;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-teal);
+            overflow-x: auto;
+            margin-bottom: 16px;
+            white-space: pre;
+        }
+
+        .dev-effort {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+
+        .effort-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .effort-tag {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .effort-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .effort-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-orange);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .effort-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Speaker Icon Animation */
+        .speaker-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .playing .speaker-icon {
+            animation: speakerPulse 1s infinite;
+        }
+
+        @keyframes speakerPulse {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+        }
+
+        /* Scenario transition */
+        .scenario-transitioning .provider-card {
+            animation: fadeSlideIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sticky Header -->
+        <div class="sticky-header">
+            <div class="header">
+                <div class="header-content">
+                    <h1>Cartesia Emotional Intelligence</h1>
+                    <p class="subtitle">Demo Portal</p>
+                </div>
+            </div>
+            
+            <div class="scenario-control">
+                <div class="scenario-selector">
+                    <select id="scenario-select" onchange="updateScenario()">
+                        <option value="pediatric">Pediatric Emergency - Anxious Parent</option>
+                        <option value="pain-assessment">Pain Assessment - Emergency Triage</option>
+                        <option value="medication-confusion">Medication Adherence - Elderly Patient</option>
+                        <option value="mental-health">Mental Health Crisis - Suicide Prevention</option>
+                        <option value="post-op">Post-Operative Care - Discharge Instructions</option>
+                    </select>
+                </div>
+                <button class="play-all-scenario" onclick="playScenarioAudio()">
+                    <svg class="speaker-icon" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    Play Scenario
+                </button>
+            </div>
+            
+            <div class="sentence-preview" id="sentence-preview">
+                "She's burning up! 104 degrees! She won't stop crying and I don't know what to do!"
+            </div>
+        </div>
+
+        <!-- Provider Cards Grid -->
+        <div class="providers-grid" id="providers-grid">
+            <!-- Hume AI Card -->
+            <div class="provider-card hume">
+                <div class="provider-header">
+                    <div class="provider-name">
+                        <span class="provider-icon"></span>
+                        Hume AI
+                    </div>
+                    <div class="provider-specs">
+                        <span class="spec-badge">100-200ms EVI</span>
+                        <span class="spec-badge">Prosody + eLLM</span>
+                    </div>
+                </div>
+                
+                <div class="tech-specs">
+                    <div class="spec-row">
+                        <span class="spec-label">Latency:</span>
+                        <span class="spec-value">100-200ms</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Confidence:</span>
+                        <span class="spec-value">0.72</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Architecture:</span>
+                        <span class="spec-value">eLLM detection</span>
+                    </div>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <div class="diagram-label">Processing Architecture</div>
+                    <div class="architecture-flow-visual">
+                        <div class="flow-node input">Speech Input</div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">Prosody Analysis
+                            <div class="latency-indicator">Tune, rhythm, timbre</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">eLLM Processing
+                            <div class="latency-indicator">Empathic understanding</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">Expressive TTS
+                            <div class="latency-indicator">100-200ms</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node output">Audio Output</div>
+                    </div>
+                </div>
+                
+                <div class="audio-section">
+                    <div class="audio-controls">
+                        <button class="play-button" onclick="playAudio('hume', event)">
+                            <svg class="speaker-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            </svg>
+                            Play
+                        </button>
+                    </div>
+                    <div class="waveform-container" id="hume-waveform">
+                        <svg class="waveform-svg" viewBox="0 0 200 40">
+                            <rect class="waveform-bar" x="10" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="20" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="30" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="40" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="50" y="5" width="4" height="30" rx="2"/>
+                            <rect class="waveform-bar" x="60" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="70" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="80" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="90" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="100" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="110" y="5" width="4" height="30" rx="2"/>
+                            <rect class="waveform-bar" x="120" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="130" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="140" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="150" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="160" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="170" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="180" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="190" y="15" width="4" height="10" rx="2"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="response-output">
+                    <div class="output-label">Voice agent output</div>
+                    <div class="output-text" id="hume-output">
+                        "I understand this is stressful."<br>
+                        <em>Generic empathy responses, requires configuration for specific contexts</em>
+                    </div>
+                </div>
+                
+                <button class="code-toggle" onclick="toggleCode('hume')">
+                    <span>{ } Developer Preview</span>
+                    <span id="hume-toggle-arrow">▼</span>
+                </button>
+                <div class="code-preview" id="hume-code">
+                    <div class="code-content">
+                        <div class="code-block">// Hume AI EVI Implementation
+// Speech → Prosody Analysis → eLLM → Expressive TTS
+const response = await hume.evi.chat({
+  audio: audioBuffer, // Speech input
+  // EVI analyzes prosody: tune, rhythm, timbre
+  // eLLM processes emotional context
+  // Generates empathic response
+});
+
+// Prosody dimensions analyzed:
+// - Tune (pitch patterns)
+// - Rhythm (speech tempo)
+// - Timbre (voice quality)
+
+// eLLM understands context and generates
+// appropriate emotional response
+
+// Limitation: Generic empathy patterns
+// May require configuration for specific contexts
+// Latency: 100-200ms (full EVI pipeline)</div>
+                        <div class="dev-effort">
+                            <span class="effort-label">Developer Effort:</span>
+                            <span class="effort-tag effort-medium">Medium - Requires context configuration</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ElevenLabs Card -->
+            <div class="provider-card elevenlabs">
+                <div class="provider-header">
+                    <div class="provider-name">
+                        <span class="provider-icon"></span>
+                        ElevenLabs
+                    </div>
+                    <div class="provider-specs">
+                        <span class="spec-badge">200-300ms total</span>
+                        <span class="spec-badge">With tagging</span>
+                    </div>
+                </div>
+                
+                <div class="tech-specs">
+                    <div class="spec-row">
+                        <span class="spec-label">Latency:</span>
+                        <span class="spec-value">150-200ms + tagging</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Confidence:</span>
+                        <span class="spec-value">N/A - Manual tags</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Architecture:</span>
+                        <span class="spec-value">Manual tagging</span>
+                    </div>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <div class="diagram-label">Processing Architecture</div>
+                    <div class="architecture-flow-visual">
+                        <div class="flow-node input">Text Input</div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">Manual [Tags]
+                            <div class="latency-indicator">+50-100ms</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">v3 TTS Engine
+                            <div class="latency-indicator">150-200ms</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node output">Audio Output</div>
+                    </div>
+                </div>
+                
+                <div class="audio-section">
+                    <div class="audio-controls">
+                        <button class="play-button" onclick="playAudio('elevenlabs', event)">
+                            <svg class="speaker-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            </svg>
+                            Play
+                        </button>
+                    </div>
+                    <div class="waveform-container" id="elevenlabs-waveform">
+                        <svg class="waveform-svg" viewBox="0 0 200 40">
+                            <rect class="waveform-bar" x="10" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="20" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="30" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="40" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="50" y="5" width="4" height="30" rx="2"/>
+                            <rect class="waveform-bar" x="60" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="70" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="80" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="90" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="100" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="110" y="5" width="4" height="30" rx="2"/>
+                            <rect class="waveform-bar" x="120" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="130" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="140" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="150" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="160" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="170" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="180" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="190" y="15" width="4" height="10" rx="2"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="response-output">
+                    <div class="output-label">Voice agent output</div>
+                    <div class="output-text" id="elevenlabs-output">
+                        "What symptoms is she experiencing?"<br>
+                        <em>Developers must predict and manually code every emotional scenario</em>
+                    </div>
+                </div>
+                
+                <button class="code-toggle" onclick="toggleCode('elevenlabs')">
+                    <span>{ } Developer Preview</span>
+                    <span id="elevenlabs-toggle-arrow">▼</span>
+                </button>
+                <div class="code-preview" id="elevenlabs-code">
+                    <div class="code-content">
+                        <div class="code-block">// ElevenLabs v3 Implementation
+// Emotion via bracketed tags in text
+const taggedText = "[concerned] Can you rate your pain? [/concerned]";
+
+const audio = await elevenlabs.generate({
+  text: taggedText, // Tags processed inline
+  voice_id: "voice_123",
+  model_id: "eleven_flash_v2", // 150-200ms
+  voice_settings: {
+    stability: 0.5, // Trade-off fidelity vs expression
+  }
+});
+
+// Dev effort: Must tag every utterance manually
+// No automatic emotion detection
+// Latency: 150-200ms (Flash model, no extra overhead)</div>
+                        <div class="dev-effort">
+                            <span class="effort-label">Developer Effort:</span>
+                            <span class="effort-tag effort-high">High - Manual rules per utterance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cartesia Card -->
+            <div class="provider-card cartesia">
+                <div class="provider-header">
+                    <div class="provider-name">
+                        <span class="provider-icon"></span>
+                        Cartesia
+                    </div>
+                    <div class="provider-specs">
+                        <span class="spec-badge">~135ms</span>
+                        <span class="spec-badge">Intelligent emotional detection</span>
+                    </div>
+                </div>
+                
+                <div class="tech-specs">
+                    <div class="spec-row">
+                        <span class="spec-label">Latency:</span>
+                        <span class="spec-value">~135ms ultra-low</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Confidence:</span>
+                        <span class="spec-value">0.86</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Architecture:</span>
+                        <span class="spec-value">Automatic detection</span>
+                    </div>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <div class="diagram-label">Processing Architecture</div>
+                    <div class="architecture-flow-visual">
+                        <div class="flow-node input">Voice/Text Input</div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">Automatic Prosody Detection
+                            <div class="latency-indicator">Zero config</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node">SONIC
+                            <div class="latency-indicator">~135ms</div>
+                        </div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-node output">Audio Output</div>
+                    </div>
+                </div>
+                
+                <div class="audio-section">
+                    <div class="audio-controls">
+                        <button class="play-button" onclick="playAudio('cartesia', event)">
+                            <svg class="speaker-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            </svg>
+                            Play
+                        </button>
+                    </div>
+                    <div class="waveform-container" id="cartesia-waveform">
+                        <svg class="waveform-svg" viewBox="0 0 200 40">
+                            <rect class="waveform-bar" x="10" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="20" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="30" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="40" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="50" y="5" width="4" height="30" rx="2"/>
+                            <rect class="waveform-bar" x="60" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="70" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="80" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="90" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="100" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="110" y="5" width="4" height="30" rx="2"/>
+                            <rect class="waveform-bar" x="120" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="130" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="140" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="150" y="12" width="4" height="16" rx="2"/>
+                            <rect class="waveform-bar" x="160" y="15" width="4" height="10" rx="2"/>
+                            <rect class="waveform-bar" x="170" y="10" width="4" height="20" rx="2"/>
+                            <rect class="waveform-bar" x="180" y="8" width="4" height="24" rx="2"/>
+                            <rect class="waveform-bar" x="190" y="15" width="4" height="10" rx="2"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="response-output">
+                    <div class="output-label">Voice agent output</div>
+                    <div class="output-text" id="cartesia-output">
+                        "104 is very high - she needs immediate medical attention. I'm alerting the pediatric team now. While preparing for transport, keep her cool with a damp cloth. I'm staying with you."<br>
+                        <em>Calm but urgent, providing immediate guidance</em>
+                    </div>
+                </div>
+                
+                <button class="code-toggle" onclick="toggleCode('cartesia')">
+                    <span>{ } Developer Preview</span>
+                    <span id="cartesia-toggle-arrow">▼</span>
+                </button>
+                <div class="code-preview" id="cartesia-code">
+                    <div class="code-content">
+                        <div class="code-block">// Cartesia SONIC Implementation
+const response = await cartesia.sonic({
+  text: "Stay with me, help is coming",
+  voice_id: "healthcare_voice",
+  // Automatic prosody detection & matching
+  // No tags or instructions needed
+  // State-space model: 1.5x faster than transformers
+});
+
+// Zero configuration required
+// Contextual understanding built-in
+
+// Dev effort: None - true drop-in replacement
+// Latency: ~135ms ultra-low latency</div>
+                        <div class="dev-effort">
+                            <span class="effort-label">Developer Effort:</span>
+                            <span class="effort-tag effort-low">Low - Drop-in replacement</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Healthcare scenario data
+        const scenarios = {
+            'pain-assessment': {
+                sentence: "It's like... burning... can't breathe... please help me...",
+                hume: {
+                    output: '"I understand you\'re experiencing discomfort."<br><em>Generic empathy responses, requires configuration for specific contexts</em>'
+                },
+                elevenlabs: {
+                    output: '"Can you rate your pain from 1 to 10?"<br><em>Developers must predict and manually code every emotional scenario</em>'
+                },
+                cartesia: {
+                    output: '"I hear severe pain and breathing difficulty. Getting emergency help now. Stay with me."<br><em>Urgent tone matching patient distress level</em>'
+                }
+            },
+            'medication-confusion': {
+                sentence: "Which pills? The morning ones? I... I took something already but I don't remember when...",
+                hume: {
+                    output: '"Let me help you with your medication."<br><em>Generic empathy responses, requires configuration for specific contexts</em>'
+                },
+                elevenlabs: {
+                    output: '"Check your medication log."<br><em>Developers must predict and manually code every emotional scenario</em>'
+                },
+                cartesia: {
+                    output: '"That\'s okay. Let\'s go through this slowly together. Do you have your pill organizer nearby?"<br><em>Slower pace, clear enunciation for cognitive support</em>'
+                }
+            },
+            'mental-health': {
+                sentence: "I don't see the point anymore. Nobody would miss me if I just... disappeared.",
+                hume: {
+                    output: '"I hear that you\'re feeling sad."<br><em>Generic empathy responses, requires configuration for specific contexts</em>'
+                },
+                elevenlabs: {
+                    output: '"Would you like to schedule an appointment?"<br><em>Developers must predict and manually code every emotional scenario</em>'
+                },
+                cartesia: {
+                    output: '"I\'m deeply concerned about what you\'re saying. You matter, and I want to help. Can we talk about what you\'re feeling right now?"<br><em>Warm, engaged tone for crisis intervention</em>'
+                }
+            },
+            'post-op': {
+                sentence: "The incision is red and hot... there's this yellowish stuff... should I be worried?",
+                hume: {
+                    output: '"That sounds concerning."<br><em>Generic empathy responses, requires configuration for specific contexts</em>'
+                },
+                elevenlabs: {
+                    output: '"Monitor your symptoms."<br><em>Developers must predict and manually code every emotional scenario</em>'
+                },
+                cartesia: {
+                    output: '"Those are signs of possible infection. We need to address this immediately. Can you come to the clinic now, or should I arrange transport?"<br><em>Clear urgency for medical intervention</em>'
+                }
+            },
+            'pediatric': {
+                sentence: "She's burning up! 104 degrees! She won't stop crying and I don't know what to do!",
+                hume: {
+                    output: '"I understand this is stressful."<br><em>Generic empathy responses, requires configuration for specific contexts</em>'
+                },
+                elevenlabs: {
+                    output: '"What symptoms is she experiencing?"<br><em>Developers must predict and manually code every emotional scenario</em>'
+                },
+                cartesia: {
+                    output: '"104 is very high - she needs immediate medical attention. I\'m alerting the pediatric team now. While preparing for transport, keep her cool with a damp cloth. I\'m staying with you."<br><em>Calm but urgent, providing immediate guidance</em>'
+                }
+            }
+        };
+
+        // Audio file mapping (backend integration point)
+        const audioUrls = {
+            'hume': {
+                'pain-assessment': 'https://github.com/dhwaniigarg/demo-/raw/main/hume-pain-assessment.mp3.wav',
+                'medication-confusion': '/api/audio/hume-medication-confusion.mp3',
+                'mental-health': '/api/audio/hume-mental-health.mp3',
+                'post-op': '/api/audio/hume-post-op.mp3',
+                'pediatric': '/api/audio/hume-pediatric.mp3'
+            },
+            'elevenlabs': {
+                'pain-assessment': 'https://github.com/dhwaniigarg/demo-/raw/main/elevenlabs-pain-assessment.wav',
+                'medication-confusion': '/api/audio/elevenlabs-medication-confusion.mp3',
+                'mental-health': '/api/audio/elevenlabs-mental-health.mp3',
+                'post-op': '/api/audio/elevenlabs-post-op.mp3',
+                'pediatric': '/api/audio/elevenlabs-pediatric.mp3'
+            },
+            'cartesia': {
+                'pain-assessment': 'https://github.com/dhwaniigarg/demo-/raw/main/cartesia-pain-assessment.wav',
+                'medication-confusion': '/api/audio/cartesia-medication-confusion.mp3',
+                'mental-health': '/api/audio/cartesia-mental-health.mp3',
+                'post-op': '/api/audio/cartesia-post-op.mp3',
+                'pediatric': '/api/audio/cartesia-pediatric.mp3'
+            }
+        };
+
+        let currentScenario = 'pediatric';
+        const audioElements = {};
+
+        // Load audio for scenario
+        function loadAudioForScenario(scenario) {
+            ['hume', 'elevenlabs', 'cartesia'].forEach(provider => {
+                const key = `${provider}-${scenario}`;
+                const url = audioUrls[provider][scenario];
+                
+                // Create audio element if URL exists
+                if (url) {
+                    if (audioElements[key]) {
+                        audioElements[key].pause();
+                    }
+                    audioElements[key] = new Audio(url);
+                }
+            });
+        }
+
+        // Update scenario display with transition animation
+        function updateScenario() {
+            const select = document.getElementById('scenario-select');
+            const newScenario = select.value;
+            
+            // Add transition class
+            const grid = document.getElementById('providers-grid');
+            grid.classList.add('scenario-transitioning');
+            
+            // Update current scenario
+            currentScenario = newScenario;
+            const scenario = scenarios[newScenario];
+            
+            // Update sentence preview
+            document.getElementById('sentence-preview').textContent = 
+                `"${scenario.sentence}"`;
+            
+            // Update each provider's content
+            updateProviderContent('hume', scenario.hume);
+            updateProviderContent('elevenlabs', scenario.elevenlabs);
+            updateProviderContent('cartesia', scenario.cartesia);
+            
+            // Load audio for new scenario
+            loadAudioForScenario(newScenario);
+            
+            // Remove transition class after animation
+            setTimeout(() => {
+                grid.classList.remove('scenario-transitioning');
+            }, 500);
+        }
+
+        function updateProviderContent(provider, data) {
+            document.getElementById(`${provider}-output`).innerHTML = data.output;
+        }
+
+        // Play audio for a specific provider
+        function playAudio(provider, event) {
+            const button = event.currentTarget;
+            const key = `${provider}-${currentScenario}`;
+            
+            // Stop all other audio
+            stopAllAudio(provider);
+            
+            // Check if audio exists for this scenario
+            const audio = audioElements[key];
+            
+            if (!audio || audio.readyState < 2) {
+                // Simulate playback without audio file
+                if (button.classList.contains('playing')) {
+                    button.classList.remove('playing');
+                    button.innerHTML = `
+                        <svg class="speaker-icon" viewBox="0 0 24 24">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                        </svg>
+                        Play`;
+                } else {
+                    button.classList.add('playing');
+                    button.innerHTML = `
+                        <svg class="speaker-icon" viewBox="0 0 24 24">
+                            <path d="M6 6h12v12H6z"/>
+                        </svg>
+                        Pause`;
+                    
+                    // Auto stop after 3 seconds
+                    setTimeout(() => {
+                        button.classList.remove('playing');
+                        button.innerHTML = `
+                            <svg class="speaker-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            </svg>
+                            Play`;
+                    }, 3000);
+                }
+            } else {
+                // Play actual audio file
+                if (audio.paused) {
+                    audio.play();
+                    button.classList.add('playing');
+                    button.innerHTML = `
+                        <svg class="speaker-icon" viewBox="0 0 24 24">
+                            <path d="M6 6h12v12H6z"/>
+                        </svg>
+                        Pause`;
+                    
+                    audio.onended = () => {
+                        button.classList.remove('playing');
+                        button.innerHTML = `
+                            <svg class="speaker-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            </svg>
+                            Play`;
+                    };
+                } else {
+                    audio.pause();
+                    button.classList.remove('playing');
+                    button.innerHTML = `
+                        <svg class="speaker-icon" viewBox="0 0 24 24">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                        </svg>
+                        Play`;
+                }
+            }
+        }
+
+        // Stop all audio except the specified provider
+        function stopAllAudio(exceptProvider = null) {
+            ['hume', 'elevenlabs', 'cartesia'].forEach(provider => {
+                if (provider !== exceptProvider) {
+                    const key = `${provider}-${currentScenario}`;
+                    if (audioElements[key]) {
+                        audioElements[key].pause();
+                        audioElements[key].currentTime = 0;
+                    }
+                    
+                    const button = document.querySelector(`.${provider} .play-button`);
+                    if (button) {
+                        button.classList.remove('playing');
+                        button.innerHTML = `
+                            <svg class="speaker-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            </svg>
+                            Play`;
+                    }
+                }
+            });
+        }
+
+        // Play scenario audio (patient voice)
+        function playScenarioAudio() {
+            // Play the scenario audio file for the current scenario
+            let scenarioAudioUrl;
+            
+            if (currentScenario === 'pediatric') {
+                scenarioAudioUrl = 'https://github.com/dhwaniigarg/demo-/raw/main/scenario.m4a';
+            } else {
+                scenarioAudioUrl = `/api/audio/scenario-${currentScenario}.mp3`;
+            }
+            
+            // Stop any currently playing audio
+            stopAllAudio();
+            
+            // Create and play scenario audio
+            const audio = new Audio(scenarioAudioUrl);
+            const button = document.querySelector('.play-all-scenario');
+            
+            button.classList.add('playing');
+            
+            audio.play().catch(() => {
+                // Fallback if audio file doesn't exist
+                console.log('Scenario audio not available');
+                button.classList.remove('playing');
+            });
+            
+            audio.onended = () => {
+                button.classList.remove('playing');
+            };
+        }
+
+        // Play all audio for current scenario sequentially
+        function playAllScenario() {
+            const providers = ['hume', 'elevenlabs', 'cartesia'];
+            let index = 0;
+            
+            function playNext() {
+                if (index < providers.length) {
+                    const provider = providers[index];
+                    const key = `${provider}-${currentScenario}`;
+                    const button = document.querySelector(`.${provider} .play-button`);
+                    
+                    if (button) {
+                        // Create a mock event object
+                        const mockEvent = { currentTarget: button };
+                        playAudio(provider, mockEvent);
+                        
+                        // Calculate delay for next audio
+                        let delay;
+                        if (audioElements[key] && audioElements[key].duration) {
+                            delay = audioElements[key].duration * 1000 + 500;
+                        } else {
+                            delay = 3500; // Default simulation time + buffer
+                        }
+                        
+                        setTimeout(() => {
+                            index++;
+                            playNext();
+                        }, delay);
+                    }
+                }
+            }
+            
+            // Stop all audio first
+            stopAllAudio();
+            
+            // Start sequential playback
+            playNext();
+        }
+
+        // Toggle code preview
+        function toggleCode(provider) {
+            const codePreview = document.getElementById(`${provider}-code`);
+            const arrow = document.getElementById(`${provider}-toggle-arrow`);
+            
+            if (codePreview.classList.contains('expanded')) {
+                codePreview.classList.remove('expanded');
+                arrow.textContent = '▼';
+            } else {
+                codePreview.classList.add('expanded');
+                arrow.textContent = '▲';
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateScenario();
+            loadAudioForScenario(currentScenario);
+        });
+    </script>
+</body>
+</html>
