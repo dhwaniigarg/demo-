@@ -1291,10 +1291,14 @@ const response = await cartesia.sonic({
                 }
             });
         }
-          // Play Hume audio (patient voice)
-        function playHumeAudio() {
-               let HumeAudioUrl = 'https://github.com/dhwaniigarg/demo-/blob/main/hume-pain-assessment.mp3';
-            } 
+ <script>
+  function playHumeAudio() {
+    const audio = new Audio('https://raw.githubusercontent.com/dhwaniigarg/demo-/main/hume-pain-assessment.mp3');
+    audio.play().catch(err => {
+      console.error('Audio playback failed:', err);
+    });
+  }
+</script>
         // Play scenario audio (patient voice)
         function playScenarioAudio() {
             // Play the scenario audio file for the current scenario
