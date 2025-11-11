@@ -206,10 +206,10 @@
             border-color: rgba(139, 92, 246, 0.3);
         }
 
-        .provider-card.elevenlabs:hover {
+        .provider-card.:hover {
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.4),
-                0 0 60px -20px var(--elevenlabs-yellow);
+                0 0 60px -20px var(---yellow);
             border-color: rgba(252, 211, 77, 0.3);
         }
 
@@ -242,8 +242,8 @@
             background: var(--hume-purple);
         }
 
-        .elevenlabs .provider-icon {
-            background: var(--elevenlabs-yellow);
+        . .provider-icon {
+            background: var(---yellow);
         }
 
         .cartesia .provider-icon {
@@ -361,8 +361,8 @@
             border-color: var(--hume-purple);
         }
 
-        .elevenlabs .flow-node:hover {
-            border-color: var(--elevenlabs-yellow);
+        . .flow-node:hover {
+            border-color: var(---yellow);
         }
 
         .flow-arrow {
@@ -395,9 +395,9 @@
             border-color: var(--hume-purple);
         }
 
-        .elevenlabs .flow-node.input {
+        . .flow-node.input {
             background: rgba(252, 211, 77, 0.1);
-            border-color: var(--elevenlabs-yellow);
+            border-color: var(---yellow);
         }
 
         .flow-node.output {
@@ -445,8 +445,8 @@
             background: linear-gradient(135deg, var(--hume-purple), #7A4FE0);
         }
 
-        .elevenlabs .play-button {
-            background: linear-gradient(135deg, var(--elevenlabs-yellow), #FAC03D);
+        . .play-button {
+            background: linear-gradient(135deg, var(---yellow), #FAC03D);
             color: var(--bg-dark);
         }
 
@@ -493,8 +493,8 @@
             fill: var(--hume-purple);
         }
 
-        .elevenlabs .waveform-bar {
-            fill: var(--elevenlabs-yellow);
+        . .waveform-bar {
+            fill: var(---yellow);
         }
 
         .playing .waveform-bar {
@@ -812,12 +812,12 @@ const response = await hume.evi.chat({
                 </div>
             </div>
 
-            <!-- ElevenLabs Card -->
-            <div class="provider-card elevenlabs">
+            <!--  Card -->
+            <div class="provider-card ">
                 <div class="provider-header">
                     <div class="provider-name">
                         <span class="provider-icon"></span>
-                        ElevenLabs
+                        
                     </div>
                     <div class="provider-specs">
                         <span class="spec-badge">200-300ms total</span>
@@ -859,7 +859,7 @@ const response = await hume.evi.chat({
                 
                 <div class="audio-section">
                     <div class="audio-controls">
-                           <audio id="elevenlabs-audio" src="elevenlabs-pain-assessment.mp3"></audio>
+                           <audio id="-audio" src="elevenlabs-pain-assessment.mp3"></audio>
                             <button class="play-button" onclick="document.getElementById('elevenlabs-audio').play()">
                             <svg class="speaker-icon" viewBox="0 0 24 24">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
@@ -977,7 +977,7 @@ const audio = await elevenlabs.generate({
                 
                 <div class="audio-section">
                     <div class="audio-controls">
-                        <audio id="cartesia-audio" src="cartesia-pain-assessment.mp3"></audio>
+                        <audio id="-audio" src="cartesia-pain-assessment.mp3"></audio>
                             <button class="play-button" onclick="document.getElementById('cartesia-audio').play()">
                             <svg class="speaker-icon" viewBox="0 0 24 24">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
