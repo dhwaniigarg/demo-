@@ -737,7 +737,7 @@
                 
                 <div class="audio-section">
                     <div class="audio-controls">
-                        <button class="play-button" onclick="playAudio('hume', event)">
+                        <button class="Play" onclick="playHumeAudio()">
                             <svg class="speaker-icon" viewBox="0 0 24 24">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
                             </svg>
@@ -1291,7 +1291,16 @@ const response = await cartesia.sonic({
                 }
             });
         }
-
+          // Play Hume audio (patient voice)
+        function playHumeAudio() {
+            // Play the scenario audio file for the current scenario
+            let HumeAudioUrl;
+            
+            if (currentScenario === 'pediatric') {
+                scenarioAudioUrl = 'https://github.com/dhwaniigarg/demo-/raw/main/scenario.m4a';
+            } else {
+                scenarioAudioUrl = `/api/audio/scenario-${currentScenario}.mp3`;
+            }
         // Play scenario audio (patient voice)
         function playScenarioAudio() {
             // Play the scenario audio file for the current scenario
