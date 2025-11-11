@@ -1297,9 +1297,9 @@ const response = await cartesia.sonic({
             let HumeAudioUrl;
             
             if (currentScenario === 'pediatric') {
-                scenarioAudioUrl = 'https://github.com/dhwaniigarg/demo-/raw/main/scenario.m4a';
+                HumeAudioUrl = 'https://github.com/dhwaniigarg/demo-/blob/main/hume-pain-assessment.mp3';
             } else {
-                scenarioAudioUrl = `/api/audio/scenario-${currentScenario}.mp3`;
+                HumeAudioUrl = `/api/audio/scenario-${currentScenario}.mp3`;
             }
         // Play scenario audio (patient voice)
         function playScenarioAudio() {
