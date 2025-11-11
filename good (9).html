@@ -700,7 +700,7 @@
                         Hume AI
                     </div>
                     <div class="provider-specs">
-                        <span class="spec-badge">100-200ms EVI</span>
+                        <span class="spec-badge">100-200ms</span>
                         <span class="spec-badge">Prosody + eLLM</span>
                     </div>
                 </div>
@@ -737,7 +737,8 @@
                 
                 <div class="audio-section">
                     <div class="audio-controls">
-                        <button class="play-button" onclick="playAudio('hume', event)">
+                           <audio id="hume-audio" src="hume-pain-assessment.mp3"></audio>
+                             <button class="play-button" onclick="document.getElementById('hume-audio').play()">
                             <svg class="speaker-icon" viewBox="0 0 24 24">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
                             </svg>
